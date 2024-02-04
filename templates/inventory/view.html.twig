@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ item.name }}{% endblock %}
+
+{% block body %}
+    {% macro scalarrow(header, data, currency) %}
+        {% if data %}
+            <tr>
+                <th scope="row">{{ header }}</th>
+                {% if currency %}
+                    <td>{{ data|localizedcurrency('USD') }}</td>
+                {% else %}
+                    <td>{{ data }}</td>                
+                {% endif %}
+            </tr>
+        {% endif %}
+    {% endmacro %}
+
+    {% macro tagrow(header, category, tags) %}
+        {% if tags %}
+            {% import 'macros.html.twig' as macros %}
+            <tr>
+                <th scope="row">{{ header }}</th>
+                <td>{{ macros.tags(category, tags) }}</td>
+            </tr>
+        {% endif %}
+    {% endmacro %}
+    {% import _self as table %}
+
+    <table class="table table-borderless item">
+        <tbody>
+            {{ table.scalarrow('Quantity', item.quantity) }}
+            {{ table.scalarrow('Purchase Price (x 1)', item.purchasePrice, true) }}
+            {{ table.scalarrow('Manufacturer', item.manufacturer) }}
+            {{ table.scalarrow('Model', item.model) }}
+            {{ table.scalarrow('Serial Numbers', item.serialNumbers|nl2br) }}
+            {{ table.scalarrow('Current Value (x 1)', item.value, true) }}
+            {% if item.quantity > 1 %}
+                {{ table.scalarrow("Purchase Price (x #{item.quantity})", item.totalPurchasePrice, true) }}
+                {{ table.scalarrow("Current Value (x #{item.quantity})", item.totalValue, true) }}
+            {% endif %}
+            {{ table.tagrow('Types / Tags', 'types', item.types) }}
+            {{ table.tagrow('Location(s)', 'locations', item.locations) }}
+            {% if item.acquiredDate %}
+                {{ table.scalarrow('Acquired', item.acquiredDate|date("m/d/Y")) }}  {# TODO: Localize date format #}
+            {% endif %}
+            {{ table.scalarrow('Notes', item.notes) }}
+
+            {% if images %}
+                <tr>
+                    <th scope="row">Images</th>
+                    <td>
+                        {% for filename in images %}
+                            <a href="{{ path('inventory_image', {'id': item.id, 'filename': filename}) }}">
+                                <img src="{{ path('inventory_image', {'id': item.id, 'filename': filename}) }}?w=200">
+                            </a>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('inventory_edit', {'id': item.id}) }}">Edit</a>
+{% endblock %}
+

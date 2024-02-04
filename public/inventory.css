@@ -1,0 +1,30 @@
+body {
+    font-size: 1rem;
+}
+
+main {
+    border-top: 2px solid #117298;
+    width: 100%;
+}
+
+h1 {
+    font-size: 1.75rem;
+}
+
+.item th[scope=row] {
+    width: 15rem;
+}
+
+.item img {
+    max-width: 200px;
+    margin: 0 1rem 1rem 0;
+}
+
+.tag-list .card {
+    width: 202px;
+}
+
+.tag-list .no-image {
+    background-color: #c0c0c0;
+    height: 200px;
+}

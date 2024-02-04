@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Inventory - {% block title %}Home{% endblock %}</title>
+        <link href="/vendor/bootstrap.min.css" rel="stylesheet">
+        <link href="/vendor/select2.min.css" rel="stylesheet">
+        <link href="/inventory.css" rel="stylesheet">
+        <script src="/vendor/jquery.min.js" type="text/javascript"></script>
+        <script src="/vendor/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/vendor/select2.min.js" type="text/javascript"></script>
+        <script src="/inventory.js" type="text/javascript"></script>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Inventory</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('inventory_add') }}">Add</a>
+                    </li>
+                    {% for category, categoryTitle in {'types': 'Type', 'locations': 'Location'} %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" 
+                                href="#" 
+                                id="navbarDropdown" 
+                                role="button" 
+                                data-toggle="dropdown" 
+                                aria-haspopup="true" 
+                                aria-expanded="false">
+                                {{ categoryTitle }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% for tag in docs.getTopTags(category) %}
+                                    <a class="dropdown-item" href="{{ path('inventory_list_by_tag', {'category': category, 'tag': tag}) }}">{{ tag }}</a>
+                                {% endfor %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('tag_list', {'category': category}) }}">More...</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <form class="form-inline" method="GET" action="{{ path('inventory_list') }}">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                {# <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> #}
+            </form>
+
+            <button class="navbar-toggler" 
+                    type="button" 
+                    data-toggle="collapse" 
+                    data-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" 
+                    aria-expanded="false" 
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>
+
+        <main role="main" class="px-1 py-1 px-md-3 py-md-4">
+            <h1>{{ block('title') }}</h1>
+            {% block body %}{% endblock %}
+        </main>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
